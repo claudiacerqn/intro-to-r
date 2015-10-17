@@ -1,0 +1,61 @@
+---
+title: "Intro to R"
+output:
+  dcTemplate::dc_lesson_template:
+    fig_width: 6
+    fig_height: 6
+    highlight: pygments
+---
+
+
+```{r knitr_init, echo = FALSE, cache = FALSE}
+library(knitr)
+
+## Global options
+options(max.print = "75")
+opts_chunk$set(cache = TRUE,
+               prompt = FALSE,
+               tidy = TRUE,
+               comment = "> #",
+               message = FALSE,
+               warning = FALSE)
+opts_knit$set(width = 75)
+```
+
+**Instructors:** Tim Dennis & Reid Otsuji  
+**Dates:** 10/20 & 11/4  
+**Time:** 10-noon  
+**Location:** BLB Classroom 4  
+**Sponsoring Library Programs:** Research & Reference Advisory – Data Services & Research Data Curation   
+
+This is an introduction to R designed for participants with no programming experience.  They start with some basic information about R syntax, the RStudio interface, and move through how to import CSV files, the structure of data.frame, how to deal with factors, how to add/remove rows and columns, and finish with how to calculate summary statistics for each level and a very brief introduction to plotting.
+
+
+**NOTE: This course is largely adapted from the Data Carpentry's R for Ecology lesson <http://www.datacarpentry.org/ >.**
+
+## Lessons: 
+
+* Lesson 00 Before We Start 
+* Lesson 01 Introduction to R
+* Lesson 02 Starting with Data
+* Lesson 03 Introducing `data.frame`
+
+# Setup
+
+## R
+
+[R](http://www.r-project.org) is a programming language that is especially powerful for data exploration, visualization, and statistical analysis. To interact with R, we use [RStudio](http://www.rstudio.com/).
+
+## Windows {#r-windows}
+
+Install R by downloading and running [this .exe file](http://cran.r-project.org/bin/windows/base/release.htm) from [CRAN](http://cran.r-project.org/index.html). Also, please install the [RStudio IDE](http://www.rstudio.com/ide/download/desktop).
+
+## Mac OS X {#r-macosx}
+
+Install R by downloading and running [this .pkg file](http://cran.r-project.org/bin/macosx/R-latest.pkg) from
+[CRAN](http://cran.r-project.org/index.html). Also, please install the [RStudio IDE](http://www.rstudio.com/ide/download/desktop).
+
+
+## Linux {#r-linux}
+
+You can download the binary files for your distribution from [CRAN](http://cran.r-project.org/index.html). Or you can use your package manager (e.g. for Debian/Ubuntu run `sudo apt-get install r-base` and for Fedora run `sudo yum install R`).Also, please install the [RStudio IDE](http://www.rstudio.com/ide/download/desktop).
