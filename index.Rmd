@@ -31,14 +31,16 @@ opts_knit$set(width = 75)
 This is an introduction to R designed for participants with no programming experience.  They start with some basic information about R syntax, the RStudio interface, and move through how to import CSV files, the structure of data.frame, how to deal with factors, how to add/remove rows and columns, and finish with how to calculate summary statistics for each level and a very brief introduction to plotting.
 
 
-**NOTE: This course is largely adapted from the Data Carpentry's R for Ecology lesson <http://www.datacarpentry.org/ >.**
+**NOTE: This course is largely adapted from the Data Carpentry's R for Ecology lessons <http://www.datacarpentry.org/>.**
 
+<!--
 ## Lessons: 
 
 * Lesson 00 Before We Start 
 * Lesson 01 Introduction to R
 * Lesson 02 Starting with Data
 * Lesson 03 Introducing `data.frame`
+-->
 
 # Setup
 
