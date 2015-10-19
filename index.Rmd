@@ -35,7 +35,7 @@ This is an introduction to R designed for participants with no programming exper
 
 ## Lessons: 
 
-* [Lesson 00 Before We Start]() - 15 min
+* [Lesson 00 Before We Start](00-before-we-start.html) - 15 min
 * [Lesson 01 Introduction to R](01-intro-to-R.html) - 45min
 * [Lesson 02 Starting with Data](02-working-with-data.html) -30min
 * [Lesson 03 Introducing `data.frame`](03-data-frames.html) - 30min
