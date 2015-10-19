@@ -54,5 +54,47 @@ Based on the output of str(surveys), can you answer the following questions?
 3. How many species have been recorded during these surveys?
 4. As you can see, the columns species and sex are of a special class called factor. 
 
+## Challenge 3 
 
+```{r wrong-order, results='show', purl=TRUE}
+## Challenge
+
+## How can you recreate this plot but by having "control" being listed
+##last instead of first?
+exprmt <- factor(c("treat1", "treat2", "treat1", "treat3", "treat1", "control",
+                   "treat1", "treat2", "treat3"))
+table(exprmt)
+barplot(table(exprmt))
+```
+
+## Answer to 3 
+
+```{r correct-order, purl=FALSE}
+exprmt <- factor(exprmt, levels=c("treat1", "treat2", "treat3", "control"))
+barplot(table(exprmt))
+```
+
+## Challenge 4
+
+1. There are a few mistakes in this hand crafted `data.frame`, can you spot and
+fix them? Don't hesitate to experiment!
+
+```
+author_book <- data.frame(author_first=c("Charles", "Ernst", "Theodosius"),
+                          author_last=c(Darwin, Mayr, Dobzhansky),
+                          year=c(1942, 1970))
+```
+
+
+## Challenge 5
+
+Can you predict the class for each of the columns in the following example?
+
+```
+cntry_climate<- data.frame(country=c("Canada", "Panama", "South Africa", "Australia"),
+                          climate=c("cold", "hot", "temperate", "hot/temperate"),
+                          temperature=c(10, 30, 18, "15"),
+                          northern_hemisphere=c(TRUE, TRUE, FALSE, "FALSE"),
+                          has_kangaroo=c(FALSE, FALSE, FALSE, 1))
+```
 

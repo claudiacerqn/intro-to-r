@@ -33,15 +33,23 @@ This is an introduction to R designed for participants with no programming exper
 
 **NOTE: This course is largely adapted from the Data Carpentry's R for Ecology lessons <http://www.datacarpentry.org/>.**
 
-<!--
 ## Lessons: 
 
-* Lesson 00 Before We Start 
-* Lesson 01 Introduction to R
-* Lesson 02 Starting with Data
-* Lesson 03 Introducing `data.frame`
--->
+* [Lesson 00 Before We Start]() - 15 min
+* [Lesson 01 Introduction to R](01-intro-to-R.html) - 45min
+* [Lesson 02 Starting with Data](02-working-with-data.html) -30min
+* [Lesson 03 Introducing `data.frame`](03-data-frames.html) - 30min
 
+## Supplemental lesson
+
+* [Lesson 04 Creating functions](04-func-R.Rmd) - 30min
+
+## Resources 
+
+* [RStudio Keyboard Shortcuts](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts)
+	- Insert assignment operator: windows (Alt+-); mac(Option+-)
+	- Insert pipe operator: win(Ctrl+Shift+M); mac(Alt+Shift+M)
+	
 # Setup
 
 ## R
