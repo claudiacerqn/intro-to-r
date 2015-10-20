@@ -52,7 +52,8 @@ This is an introduction to R designed for participants with no programming exper
 * [RStudio Keyboard Shortcuts](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts)
 	- Insert assignment operator: windows (Alt+-); mac(Option+-)
 	- Insert pipe operator: win(Ctrl+Shift+M); mac(Alt+Shift+M)
-	
+* [Instructor's Notes](instr_notes.html)
+
 # Setup
 
 ## R
