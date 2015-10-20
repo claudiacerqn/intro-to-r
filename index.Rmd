@@ -40,9 +40,12 @@ This is an introduction to R designed for participants with no programming exper
 * [Lesson 02 Starting with Data](02-working-with-data.html) -30min
 * [Lesson 03 Introducing `data.frame`](03-data-frames.html) - 30min
 
-## Supplemental lesson
+## Supplemental lessons
 
-* [Lesson 04 Creating functions](04-func-R.Rmd) - 30min
+* [Creating functions](http://swcarpentry.github.io/r-novice-inflammation/02-func-R.html)
+* [Analyzing multiple data sets](http://swcarpentry.github.io/r-novice-inflammation/03-loops-R.html)
+* [Making Choices](http://swcarpentry.github.io/r-novice-inflammation/04-cond.html)
+
 
 ## Resources 
 

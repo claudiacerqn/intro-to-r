@@ -5,6 +5,16 @@ date: "October 17, 2015"
 output: ioslides_presentation
 ---
 
+## Motivation
+
+* R is not a GUI, and that's a good thing
+* R code is great for reproducibility
+* R is interdisciplinary and extensible (image, gis, timeseries, ML)
+* R works on data of all shapes and size
+* R produces high-quality graphics
+* Community
+* Open source/cross platform
+
 ## R Script
 
 ![Example of a simple R script](img/r_starting_example_script.png)
@@ -98,3 +108,8 @@ cntry_climate<- data.frame(country=c("Canada", "Panama", "South Africa", "Austra
                           has_kangaroo=c(FALSE, FALSE, FALSE, 1))
 ```
 
+## Challenge 6
+
+The function nrow() on a data.frame returns the number of rows. Use it, in conjuction with seq() 
+to create a new data.frame called surveys_by_10 that includes every 10th row of the survey data 
+frame starting at row 10 (10, 20, 30, …)
