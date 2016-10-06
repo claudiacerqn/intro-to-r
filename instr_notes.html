@@ -132,11 +132,15 @@ help.search(&quot;kruskal&quot;) #search for fuction must be installed </code></
 <pre class="r"><code>weight_kg &lt;- 55 # object names sush as x, current_temp, subject_id, but cannot start with number, case sen
 2.2 * weight_kg # can use object to convert to lbs</code></pre>
 <pre><code>## [1] 121</code></pre>
-<pre class="r"><code>weight_kg &lt;- 57.5 # can assign new value to object
+<pre class="r"><code>weight_kg &lt;- 57.5 # can assign new value to the object
 2.2 * weight_kg # shows different results</code></pre>
 <pre><code>## [1] 126.5</code></pre>
 <pre class="r"><code>weight_lb &lt;- 2.2 * weight_kg #can create new object from mult
-weight_lb &lt;- 100  # assign new value</code></pre>
+weight_lb</code></pre>
+<pre><code>## [1] 126.5</code></pre>
+<pre class="r"><code>weight_lb &lt;- 100  # assign new value
+weight_lb</code></pre>
+<pre><code>## [1] 100</code></pre>
 <pre class="r"><code>#challenge
 mass &lt;- 47.5
 age &lt;- 122
@@ -146,6 +150,41 @@ age &lt;- 122
 <pre><code>## [1] 102</code></pre>
 <pre class="r"><code>(mass_index &lt;- mass/age)</code></pre>
 <pre><code>## [1] 0.9313725</code></pre>
+</div>
+<div id="creating-functions" class="section level2">
+<h2>Creating functions</h2>
+<ul>
+<li>define a function, return value from function</li>
+</ul>
+<pre class="r"><code>fahr_to_kelvin &lt;- function(temp){
+  kelvin &lt;- ((temp - 32) * (5/9)) +273.15
+  return(kelvin)
+}</code></pre>
+<pre class="r"><code># using the function
+fahr_to_kelvin(32)</code></pre>
+<pre><code>## [1] 273.15</code></pre>
+<pre class="r"><code>fahr_to_kelvin(212)</code></pre>
+<pre><code>## [1] 373.15</code></pre>
+<pre class="r"><code>kelvin_to_celsius &lt;- function(temp){
+  celsius &lt;- temp - 273.15
+  return(celsius)
+}
+
+#absolute zero in celsius 
+kelvin_to_celsius(0)</code></pre>
+<pre><code>## [1] -273.15</code></pre>
+</div>
+<div id="lets-convert-fahrenheit-to-celsius" class="section level2">
+<h2>lets convert fahrenheit to celsius</h2>
+<pre class="r"><code>fahr_to_celsius &lt;- function(temp) {
+  temp_k &lt;- fahr_to_kelvin(temp)
+  result &lt;- kelvin_to_celsius(temp_k)
+  return(result)
+}
+
+#freezing point of water in celsius
+fahr_to_celsius(32.0)</code></pre>
+<pre><code>## [1] 0</code></pre>
 </div>
 <div id="vectors-data-types" class="section level2">
 <h2>Vectors &amp; data types</h2>
@@ -188,7 +227,7 @@ weights</code></pre>
 </ul>
 </div>
 <div id="starting-with-data" class="section level2">
-<h2>starting with data</h2>
+<h2>Starting with data</h2>
 <ul>
 <li>Let’s load our survey data.</li>
 </ul>

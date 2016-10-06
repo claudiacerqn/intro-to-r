@@ -1,0 +1,484 @@
+---
+title: "GGPLOT and Genomics"
+output: html_document
+---
+
+
+```{r knitr_init, echo = FALSE, cache = FALSE}
+library(knitr)
+
+## Global options
+options(max.print = "75")
+opts_chunk$set(cache = TRUE,
+               prompt = FALSE,
+               tidy = TRUE,
+               comment = "> #",
+               message = FALSE,
+               warning = FALSE)
+opts_knit$set(width = 75)
+```
+
+* We need to set our working directory
+
+```{r}
+setwd('~/workshops/lessons/intro-to-r/ggplot/')
+```
+
+If you don't have the data from yesterday's workshop, load it. 
+
+```{r}
+metadata <- read.csv('http://www.datacarpentry.org/R-genomics/data/Ecoli_metadata.csv')
+
+```
+
+* Take a look at it. 
+```{r}
+head(metadata)
+```
+* R has a number of built-in tools for basic graphing - types such as histograms, scatter plots, bar charts, bloxplots, and [more](http://www.statmethods.net/graphs/).
+*Let's test a few out on the `genome_size` vector in our dataset. 
+
+```{r}
+
+genome_size <- metadata$genome_size
+```
+
+### Scatterplot 
+
+```{r scatter}
+plot(genome_size)
+```
+
+* Each point represents a clone and the value on the x-asis is the clone index in the file, the y-axi corr. to the genome size for the clone
+* For any plot you can customize aspects (fonts, axes, titles) through graphic options.
+* E.g. we can change the shape of the data point using pch
+
+```{r}
+plot(genome_size, pch=8)
+```
+
+* We can add a title to the plot by assigning a string to main: 
+
+```{r}
+plot(genome_size, pch=8, main = "Scatter plot of genome sizes")
+```
+
+### Histogram
+
+* Another way to visualize the distribution of genome sizes is to use a historgram.
+
+```{r}
+hist(genome_size)
+```
+
+### Boxplot 
+
+* We can use plots to compare values between different citrate mutant status using boxplot. 
+* Boxplotp provides a graphcia view of the median, quartiles, maximum, and min of a data set. 
+
+```{r}
+boxplot(genome_size ~ cit, metadata)
+```
+
+* Like scatterplots we can pass in arguments to add in extras like plot title, axis labels, and colors
+
+```{r}
+boxplot(genome_size ~ cit, metadata, col=c('pink', 'purple', 'darkgrey'), 
+        main = "average expression difference between celltypes", ylab = 'Expression')
+```
+
+## More advanced figures (ggplot2)
+
+* R users favor using `ggplot2` that adds functionality to the basic plots seen above.
+* Syntax takes getting used to but is very powerful and flexible
+* let's start by recreating some of the above plots
+* NOTE: `ggplot` is best used on data in the data.frame form
+
+```{r}
+#install.packages('ggplot2')
+library(ggplot2)
+```
+
+* `ggplot` function is used to initialize the basic graph structure, then we add to it
+
+```{r}
+ggplot(metadata)
+```
+
+* Geometric objects are the actual marks we put on a plot. 
+* examples include: 
+    * points (`geom_point`, for scatter plots, dot plots)
+    * lines (`geom_lines`, for time series, etc.)
+    * boxplot (`geom_boxplot`)
+* a plot must have at least one geom, add using the + operator
+
+```{r eval=FALSE}
+ggplot(metadata) +
+  geom_point()
+```
+
+* Each type of geom has **required set of aesthetics** to be set
+* Usually accepts only a subset of all aesthetics - refer to geom help for details
+* Aesthetics mappings are set with the `aes()` function
+* Example:
+    + position (i.e. on the x and y axes)
+    + color ('outside' color)
+    + fill ('inside' color)
+    + shape (of points)
+    + linetype
+    + size
+* Let's add position for the x and y axis since `geom_point` requires mappings for x and y.
+
+```{r}
+ggplot(metadata) +
+  geom_point(aes(x = sample, y = genome_size))
+```
+
+* The labels on the x-axis are quite hard to read. Let us change that. To do this we need to add an additional `theme` layer.  
+* In ggplot `theme` system handles non-data plot elements such as:
+    + Axis labels
+    + Plot background
+    + Facet label background
+    + Legend appearance
+    
+* There are built in themes we can use or we can adjust elements.
+* for our plot let's change the x-axis labels to be plotted on a 45 degree angle
+* we will add some additiona aesthetics by mapping them to variables in our dataframe
+
+```{r}
+ggplot(metadata) +
+  geom_point(aes(x=sample, y=genome_size, color=generation, shape=cit), size =rel(3.0)) +
+  theme(axis.text.x = element_text(angle=45, hjust=1))
+```
+
+* the color of the points reflect the number of generations and the shape will reflect citrate mutant status
+* size of the points can be adjusted within the geom_point but doesn't need to be included in the aes() since the val isn't mapping to the variable
+
+### Histogram
+
+* To plot a histogram, we need `geom_bar` which requires a statistical transformation. 
+* Some plot types (such as scatterplots) do not require a transformation - each point is plotted by x and y
+* Plots such as boxplot, histograms, prediction lines, etc. need to transformed
+
+```{r}
+ggplot(metadata) +
+  geom_bar(aes(x = genome_size))
+```
+
+Let's specify a binwidth. 
+
+```{r}
+ggplot(metadata) +
+  geom_bar(aes(x = genome_size), stat = 'bin', binwidth = 0.05)
+```
+
+### Exercise
+
+Adjust the binwidth for this graph and see how it changes the plot. 
+
+
+### Boxplot 
+
+* Let's try plotting a boxplot similar to what we had using base R.
+* We can add some additional layers: plot title, axis labels
+
+```{r}
+ggplot(metadata) +
+  geom_boxplot(aes(x = cit, y= genome_size, fill=cit)) +
+  ggtitle('Boxplot of genome size by citrate mutant type') +
+  xlab('citrate mutant') +
+  ylab('genome size') +
+  theme(panel.grid.major = element_line(size=.5, color = "grey"),
+        axis.text.x = element_text(angle=45, hjust=1),
+        axis.title = element_text(size=rel(1.5)),
+        axis.text = element_text(size=rel(1.25))
+        )
+```
+
+## Writing figures to files
+
+* Two ways to export: 
+    + from the Plots panel 'export'
+    + use the R console 
+    
+
+```{r eval=F}
+pdf("figure/boxplot.pdf")
+
+ggplot(metadata) +
+  geom_boxplot(aes(x = cit, y= genome_size, fill=cit)) +
+  ggtitle('Boxplot of genome size by citrate mutant type') +
+  xlab('citrate mutant') +
+  ylab('genome size') +
+  theme(panel.grid.major = element_line(size=.5, color = "grey"),
+        axis.text.x = element_text(angle=45, hjust=1),
+        axis.title = element_text(size=rel(1.5)),
+        axis.text = element_text(size=rel(1.25))
+        )
+
+dev.off()
+```
+
+## More with GGPLOP2
+
+* Exploritory data analysis emphasizes visualization as the best tool to understand and explore our data
+* For more on ggplot2 read: Elegant Graphics for Data Analysis by Hadley Wickham (Springer, 2010) and R Graphics Cookbook by Winston Chang (O’Reilly, 2012)
+* `ggplot2` is diff. from R's base graphics b/c it is built on top of a grammar inspired by Leland Wilkinson's *Grammar of Graphics* (Springer, 2005).
+    + Provides an underlying logic to creating graphics
+    + `ggplot2` plots is built by adding layers to a plot that maps aesthetic properties of geomtetric objects to data
+    + Layers can also apply statistical transformations to data & change the scales of axes and colors
+
+Let's start by loading our *recombination on human genetic diversity data* Dataset_S1.txt.  If we downloaded to our machine we can load from file:
+
+```{r eval=FALSE}
+d <- read.csv("data/Dataset_S1.txt")
+```
+
+We can also read from the web. 
+
+```{r}
+d <- read.csv('https://raw.githubusercontent.com/vsbuffalo/bds-files/master/chapter-08-r/Dataset_S1.txt')
+
+```
+
+* Let's make a scatterplot of nucleotide `diversity` along chromosome in the `diversity` column in our `d` dataframe. 
+* But first we need to set up:
+    * First we'll add a column called position to our dataframe that's the midpoint b/t each window
+    * Second, the diversity estimates (columns Theta, Pi, and Heterozygosity) are all scaled up by 10x in the dataset (see supplementary Text S1 for more details). We’ll use the nucleotide diversity column Pi later in this chapter in plots, and it would be useful to have this scaled as per basepair nucleotide diversity
+    * third, we need to add back the `cent` variable we added on Monday that has TRUE/FALSE values indicating whether the current window is fully within a centromeric region using comparison and logical operations
+
+```{r}
+#fixing the colnames to 'percent.GC' from X.GC
+colnames(d)[12] <- "percent.GC"
+#diversity estimate scaled
+d$diversity <- d$Pi / (10*1000)  # rescale, removing 10x and making per bp
+summary(d$diversity )
+#position -midpoint b/t start and end
+d$position <- (d$end + d$start)/2
+#add logical for whether window is in a centromeric region
+d$cent <- d$start >= 25800000 & d$end <= 29700000
+```
+
+We are ready to plot:
+
+```{r}
+ggplot(d) + geom_point(aes(x=position, y=diversity))
+```
+
+* beauty of ggplot2?s grammar is that it allows you to map geometric objects’ aesthetics to columns in your dataframe
+* our diversity by position scatterplot, we mapped the x position aesthetic to the position column, and the y position to the diversity column. 
+* We specify the mapping of aesthetic attributes to columns in our dataframe using the function aes()
+
+### Challenge 
+
+We use `+ xlab('label')` and `+ ylab('label')` for adding lables to the axes.  Add a x label of "Chromosome position (basepairs)" to the x axes and "Nucleotide diversity" to the y.
+
+### Answer: 
+
+```{r}
+
+ggplot(d) + 
+  geom_point(aes(x=position, y=diversity)) +
+  xlab("chromosome position (basepairs)") + ylab("nucleotide diversity")
+
+```
+
+* You can also set the limits for continuous axes using the function `scale_x_continuous(limits=c(start, end))` where start and end are the start and end of the axes (and scale_y_continuous() for the y axis). 
+* You can change an axis to a log10-scale using the functions scale_x_log10() and scale_y_log10(). ggplot2 has numerous other scale options for discrete scales, other axes transforms, and color scales; see http://docs.ggplot2.org for more detail.
+
+* Aes mappings can be added to the ggplot() function
+* This creates the same mapping as above:
+
+```{r}
+ggplot(d, aes(x=position, y=diversity)) + geom_point()
+```
+
+* Now about the plot, notice the diversity estimates in the middle of graph
+* what is going on? 
+* `ggplot2` makes it easy to find out what's going on with EDA
+* Let's try to map a confounder or explanitory variable to another aesthetic to see if it shows any pattern.
+* Map color aes of our point geometric object to the column `cent` - this indicates whether the window falls in the centromeric region of this chromosome
+
+```{r}
+ggplot(d) + geom_point(aes(x=position, y=diversity, color=cent))
+```
+
+* The region with the missing diversity is around the centromeric
+* `ggplot2` well chosen defaults that allows you to quickly create/adjust plots without fussing & then go back to change if needed
+    + for data like logial or factors types discrete color palettes are used
+    + numeric data gets continuous color palettes
+* Exploratory data analysis is iterative and interactive process
+* one problem with plot above is how much overplotting is occurring - data oversaturation below 0.5 
+* To alleviate overplotting let's try to make the points transparent (alpha)
+* regions with multiple overlapping points appear dark 
+
+```{r}
+ggplot(d) + geom_point(aes(x=position, y=diversity), alpha=0.01)
+```
+* Notice we set the `alpha` outside the `aes()` function 
+* This is b/c we aren't mapping to a variable in the data frame, but giving it a fixed value for all data points
+* Beyond showing lack of diversity est. in the centromeric windows, nothing really shows
+* Part of problem still overplotting 
+* Bigger issue is that windows span 63 megabases and difficult to detect regional patterns with data at this scale
+
+* Let's look at diff geom - density of diversity across all positions
+* `geom_density()` calculates density 
+
+```{r}
+ggplot(d) + geom_density(aes(x=diversity), fill = 'black')
+```
+
+* Default behavior `ggplot2` uses a line to draw densities, `fill=black` fill in the lines so clearer
+* We can map a `color` to a discrete-valued column in our dataframe
+* `geom_density` will create separate density plots, group data by column mapped to color
+
+```{r}
+ggplot(d) + geom_density(aes(x=diversity, fill=cent), alpha=0.4)
+```
+
+* now we can see a pattern
+* diversity is skewed to more extreme values in centromeric regions 
+* try mapping same figure without mapping color 
+* mappling columns to additional aesthetic attributes can reveal patterns and information in the data might not be apparent in simple plots
+
+## Smoothing 
+
+* Let's look at our data using `ggplot2`'s smoothing functions
+* We'll try to investigate potential confounders in genomic data
+    * sequencing read depth
+    * GC content
+    * mapability, whether a region is capable of having reads correctly align
+    * batch effects
+* with high dimension datasets viz is the easiest way to spot issues
+
+* We'll try adding smoothing line to plots and look for trends
+* smooth requires and x and y aes()
+* let's use scatterplot and smoothing curve to examine the relationship b/t depth and total number of SNPs 
+* b/c we use same x and y for smooth and scatter we can put all in ggplot()
+
+```{r}
+ggplot(d, aes(x=depth, y=total.SNPs)) + geom_point() + geom_smooth()
+```
+
+* NOTE: by default `ggplot2` uses generalized additive models (GAM) to fit this smoothed curve for datasets with >1000 rows
+* YOu can manually specify smoothing method throug the `method` argument in geom_smooth()
+* `ggplot2` also adds a confidence intervals around smoothing curve (this can be turned off)
+* we see a relationship b/t depth and SNPs; >sequencing depth > power to detect and call SNPs 
+* relationship b/t these vars is made more complex by GC content
+* both higher and lower GC content regions have been shown to decrease read coverage'
+* we can get a sense of this effect through: 
+
+```{r}
+ggplot(d, aes(x=percent.GC, y=depth)) + geom_point() + geom_smooth()
+```
+
+* trajectory of smoothing curve indicates that GC content effects sequencing depth in our data
+* less support that low GC content leads to lower depth - fewer windows that have gc conten below 25%
+* clearly sharp drop in depth for GC contents avobe 60%
+
+
+
+## Faceting 
+
+Let's use the motifs data and do a bit of cleaning on it first. Both of these datasets were created using the GenomicRanges tools we will learn about in Chapter 9, from tracks downloaded directly from the UCSC Genome Browser. 
+
+```{r}
+mtfs <- read.delim("https://raw.githubusercontent.com/vsbuffalo/bds-files/master/chapter-08-r/motif_recombrates.txt", header=TRUE)
+rpts <- read.delim('https://raw.githubusercontent.com/vsbuffalo/bds-files/master/chapter-08-r/motif_repeats.txt', header=TRUE)
+
+```
+
+Our goal is to merge the column name in the rpts dataframe into the mtfs column, so we know which repeat each motif is contained in (if any). The link between these two datasets are the positions of each motif, identified by the chromosome and motif start position columns chr and motif_start. 
+
+```{r}
+#concatenating columns chr+motif_start into a single key string column can simplify merging
+mtfs$pos <- paste(mtfs$chr, mtfs$motif_start, sep="-")
+rpts$pos <- paste(rpts$chr, rpts$motif_start, sep="-")
+#use match() to find where each of the mtfs$pos keys occur in the rpts$pos. We’ll create this indexing vector first before doing the merge
+i <- match(mtfs$pos, rpts$pos)
+# using this indexing vector we select out  elements of rpts$name and merge these into mtfs:
+mtfs$repeat_name <- rpts$name[i]
+#same effect as above using match()’s results to i and use this directly
+mtfs$repeat_name <- rpts$name[match(mtfs$pos, rpts$pos)]
+```
+
+Now let's plot the relationship b/t recombination rate and distance to a motif using the `mtfs` from above. 
+
+```{r}
+p <- ggplot(mtfs, aes(x=dist, y=recom)) + geom_point(size=1)
+p <- p + geom_smooth(method="loess", se=FALSE, span=1/10)
+print(p)
+
+```
+
+* NOTE: `geom_smooth()` standard error estimates are turned off and smoothing `span` adjusted and method set to `loess`
+* From this data we see a slight bump in the smoothing curve where the motifs reside.
+* This data is the convolution of two different motif sequences on many diff genomic backgrounds. 
+* lots of htergenetity we aren't accounting for - washing out our sig
+
+### Challenge
+
+Use help in R (or Rstudio) `?geom_smooth` and try other parameters for `span` & `method`.
+
+* Explore `mtfs` `mtfs$motif` column contains two variations of the sequence motif.
+
+```{r}
+unique(mtfs$motif)
+```
+
+* do these motfis have any effects on local recombination? 
+* let's try grouping and coloring the loess curves by motif sequence
+
+```{r}
+ggplot(mtfs, aes(x=dist, y=recom)) + geom_point(size=1) +
+    geom_smooth(aes(color=motif), method="loess", se=FALSE, span=1/10)
+
+```
+
+* notice we put the `aes(color=motif)` in the geom_smooth
+* another way to group in `ggplot2` is via faceting or coditioning plotting (subplots)
+
+```{r}
+p <- ggplot(mtfs, aes(x=dist, y=recom)) + geom_point(size=1, color="grey")
+p <- p + geom_smooth(method='loess', se=FALSE, span=1/10)
+p <- p + facet_wrap(~ motif)
+print(p)
+
+```
+
+* `ggplot2` has two facet methods: `facet_wrap()` and `facet_grid()`
+* `facet_wrap()` takes a factor column and creates a panel for each level and wraps horizontally
+* `facet_grid()` allows finder control of facets by allowing you to specify the columns to use for vertical and horz facets:
+
+```{r}
+p <- ggplot(mtfs, aes(x=dist, y=recom)) + geom_point(size=1, color="grey")
+p <- p + geom_smooth(method='loess', se=FALSE, span=1/16)
+p <- p + facet_grid(repeat_name ~ motif)
+print(p)
+```
+* shows some of the same patterns. 
+* Motif CCTCCCTAGCCACon the THE1B repeat background has strong effect as does CCTCCCTGACCAC on the L2 repeat background.
+* you can get a sense  of the data tha goes in this plot with: 
+
+```{r}
+table(mtfs$repeat_name, mtfs$motif, useNA = "ifany")
+```
+
+* `~` used with `facet_wrap()` and `facet_grid` is how we specify model formulas in R
+* `help(formula)` for more
+* x and y scales are the same across all panels 
+* this might obscure patterns 
+* use `scales = "free_x"` or `scales = "free_y"` or `scales = "free"` for both
+
+```{r}
+p <- ggplot(mtfs, aes(x=dist, y=recom)) + geom_point(size=1, color="grey")
+p <- p + geom_smooth(method='loess', se=FALSE, span=1/10)
+p <- p + facet_wrap( ~ motif, scales="free_y")
+print(p)
+```
+
+### Challenge 
+Use facets to look at the data but group by chromosome
+
+`facet_wrap(~chr)`
+

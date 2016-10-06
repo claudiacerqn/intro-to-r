@@ -1,0 +1,407 @@
+#Intro to R 
+## Before we start
+
+* Start RStudio & show console, scripts, environments, plots
+* Code & workflow more reproducible if we document
+* Goal no just do stuff but to do it so can replicate results
+
+
+### r as calculator
+
+```{r}
+2+5
+10/5
+```
+To run code from script editor ctr+enter cmd+enter
+
+How to comment & assign objects
+
+```{r}
+# this is a comment
+# this is the second line
+# assignment operator <-
+```
+
+```{r}
+b <- 25 # = works but don't use
+
+```
+
+* Alt+- keyboard shortcut <- 
+* functions are canned scripts
+* predefined functions - typical one sqrt()
+```{r}
+
+sqrt(b)
+c <- sqrt(b)
+c
+```
+
+
+```{r}
+round(3.14159)
+
+```
+
+* Functions have arguments, some are called 'options':
+* Arguements can be defaults. 
+
+```{r}
+#use args() to find out args
+args(round)
+round(3.14159, digits = 2)
+```
+
+## getting help 
+```{r}
+?barplot
+args(lm) #shows args
+??geom_point # to get to package enabled functions 
+help.search("kruskal") #search for fuction must be installed 
+```
+
+* Look in stackoverflow http://stackoverflow.com/questions/tagged/r
+
+## Intro to R 
+
+* Explain script image. function, assignment operator, = for args, ## comments, $ operator, indentation
+
+Creating objects in console, but lost when we close session. 
+
+```{r}
+3 + 5
+
+```
+
+More useful to assign values to objects. 
+
+
+```{r}
+weight_kg <- 55 # object names sush as x, current_temp, subject_id, but cannot start with number, case sen
+2.2 * weight_kg # can use object to convert to lbs
+weight_kg <- 57.5 # can assign new value to the object
+2.2 * weight_kg # shows different results
+```
+
+```{r}
+weight_lb <- 2.2 * weight_kg #can create new object from mult
+weight_lb
+weight_lb <- 100  # assign new value
+weight_lb
+```
+
+
+```{r}
+#challenge
+mass <- 47.5
+age <- 122
+(mass <- mass * 2.0)
+(age <- age - 20)
+(mass_index <- mass/age)
+```
+
+## Creating functions
+
+* define a function, return value from function
+
+```{r}
+fahr_to_kelvin <- function(temp){
+  kelvin <- ((temp - 32) * (5/9)) +273.15
+  return(kelvin)
+}
+```
+
+```{r}
+# using the function
+fahr_to_kelvin(32)
+fahr_to_kelvin(212)
+```
+
+```{r}
+kelvin_to_celsius <- function(temp){
+  celsius <- temp - 273.15
+  return(celsius)
+}
+
+#absolute zero in celsius 
+kelvin_to_celsius(0)
+```
+
+## lets convert fahrenheit to celsius 
+```{r}
+fahr_to_celsius <- function(temp) {
+  temp_k <- fahr_to_kelvin(temp)
+  result <- kelvin_to_celsius(temp_k)
+  return(result)
+}
+
+#freezing point of water in celsius
+fahr_to_celsius(32.0)
+```
+
+
+## Vectors & data types 
+
+* vectors the workhorse of R 
+* basic data structure 
+
+```{r}
+weights <- c(50, 60, 65, 82)
+weights
+
+```
+```{r}
+animals <- c("mouse", "rat", "dog")
+animals
+```
+* functions that allow you to inspect a vector. 
+
+```{r}
+length(weights)
+length(animals)
+
+```
+
+```{r}
+class(weights)
+class(animals)
+```
+
+```{r}
+str(weights)
+str(animals)
+```
+
+* the c() function - c is for combine - creates a vector.
+
+```{r}
+#combine
+weights <- c(weights, 90)
+weights <- c(30, weights)
+weights
+```
+
+* we just saw 2 of the 6 data types: character and numeric. Other 4 are: logical, integer, complex, raw
+* vectors are one of many data structures in R: list, matrices, dataframe, factors
+
+
+
+## Starting with data
+
+* Let's load our survey data. 
+
+```{r}
+download.file("http://files.figshare.com/2236372/combined.csv", "data/portal_data_joined.csv")
+surveys <- read.csv("data/portal_data_joined.csv")
+```
+
+* wrapping an assignment in parentheses will perform the assignment and display it at the same time.
+
+```{r eval=FALSE}
+(surveys <- read.csv("data/portal_data_joined.csv"))
+
+```
+
+
+* use head to just see six rows
+
+```{r}
+
+head(surveys)
+
+```
+
+* look at the structure of the data
+
+```{r}
+
+str(surveys)
+
+```
+
+
+* challenge - slide
+* What is the class of object survey
+
+## factors 
+
+* used to represent categorical variables 
+* Factors are stored as integers
+* can only contain a pre-defined set values, known as levels
+* alpha org 
+
+```{r}
+sex <- factor(c("male", "female", "female", "male"))
+levels(sex)
+nlevels(sex)
+```
+
+* sometimes order matters in factors (low med high) 
+
+
+```{r}
+food <- factor(c("low", "high", "medium", "high", "low", "medium", "high"))
+levels(food)
+food <- factor(food, levels = c("low", "medium", "high"))
+levels(food)
+#min(food)  ## doesn't work
+```
+
+
+```{r}
+# ordered true
+food <- factor(food, levels = c("low", "medium", "high"), ordered = TRUE)
+levels(food)
+min(food)  ## works!
+```
+
+
+### converting factors 
+
+* use as.character(x)
+* converting to numeric tricky
+
+
+```{r}
+
+f <- factor(c(1, 5, 10, 2))
+as.numeric(f)  ## wrong! and there is no warning...
+as.numeric(as.character(f))  ## works...
+as.numeric(levels(f))[f]  ## The recommended way.
+
+```
+
+
+
+```{r}
+## Challenge slide
+
+## How can you recreate this plot but by having 'control' being listed last
+## instead of first?
+exprmt <- factor(c("treat1", "treat2", "treat1", "treat3", "treat1", "control", 
+                   "treat1", "treat2", "treat3"))
+table(exprmt)
+
+barplot(table(exprmt))
+```
+```{r}
+##anser
+exprmt <- factor(exprmt, levels = c("treat1", "treat2", "treat3", "control"))
+barplot(table(exprmt))
+```
+
+
+## Dataframes
+
+* data.frame is the de facto data structure for most tabular data and what we use for statistics and plotting.
+* created by functions read.csv() or read.table() - importing spreadsheets from file
+* by default data.frame converst columns that contain characters (text) into factor data type. this might not be what you want. 
+* to keep as character vectors use stringsAsFactors = False option in read.csv or read.table
+* make aware of many other 'reads'
+
+```{r}
+
+#some_data <- read.csv("data/some_file.csv", stringsAsFactors=FALSE)
+
+```
+
+* you can create data.frame manually wiht data.frame() - also takes stringsAsFactors arg
+* compare 
+
+```{r}
+example_data <- data.frame(animal=c("dog", "cat", "sea cucumber", "sea urchin"),
+                           feel=c("furry", "furry", "squishy", "spiny"),
+                           weight=c(45, 8, 1.1, 0.8))
+str(example_data)
+```
+
+```{r}
+
+example_data <- data.frame(animal=c("dog", "cat", "sea cucumber", "sea urchin"),
+                           feel=c("furry", "furry", "squishy", "spiny"),
+                           weight=c(45, 8, 1.1, 0.8), stringsAsFactors=FALSE)
+str(example_data)
+```
+
+
+
+##challenge df - slides 
+
+## inspecting data frames 
+
+* size dim() nrows() ncol()
+* content head() tail()
+* names() rownames()
+* sum str() summary()
+
+```{r}
+
+# Indexing 
+animals <- c("mouse", "rat", "dog", "cat")
+animals[2]
+#3?
+```
+
+```{r}
+#using combine
+animals[c(3,2)]
+
+```
+
+```{r}
+#slice
+animals[2:4]
+
+```
+
+
+```{r}
+more_animals <- animals[c(1:3, 2:4)]
+more_animals
+```
+
+* indexes start at 1
+* `:` is a special function that creates numeric vectors of integers in increasing or decreasing order
+* `seq()` use args(seq())
+
+```{r}
+
+seq(1, 10, by=2)
+
+```
+
+```{r}
+# desired length of sequence
+seq(5, 10, length.out=3)
+```
+
+```{r}
+seq(50, by=5, length.out=10)
+
+```
+
+```{r}
+
+seq(1, 8, by=3) # sequence stops to stay below upper limit
+
+```
+
+```{r}
+#dataframe 
+surveys[1, 1]   # first element in the first column of the data frame
+surveys[1, 6]   # first element in the 6th column
+surveys[1:3, 7] # first three elements in the 7th column
+surveys[3, ]    # the 3rd element for all columns
+surveys[, 8]    # the entire 8th column
+head_surveys <- surveys[1:6, ] # surveys[1:6, ] is equivalent to head(surveys)
+
+```
+
+
+
+#Challenge
+#The function nrow() on a data.frame returns the number of rows. Use it, in conjuction with seq() 
+#to create a new data.frame called surveys_by_10 that includes every 10th row of the survey data 
+#frame starting at row 10 (10, 20, 30, …)
+
+surveys_by_10 <- surveys[seq(10, nrow(surveys), by=10), ]
