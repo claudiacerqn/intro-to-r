@@ -30,11 +30,24 @@ If you don't have the data from yesterday's workshop, load it.
 metadata <- read.csv('http://www.datacarpentry.org/R-genomics/data/Ecoli_metadata.csv')
 
 ```
-
+* About the [data](http://www.datacarpentry.org/R-genomics/02-starting-with-data.html). 
 * Take a look at it. 
 ```{r}
 head(metadata)
 ```
+
+We are studying a population of Escherichia coli (designated Ara-3), which were propagated for more than 40,000 generations in a glucose-limited minimal medium. This medium was supplemented with citrate which E. coli cannot metabolize in the aerobic conditions of the experiment. Sequencing of the populations at regular time points reveals that spontaneous citrate-using mutants (Cit+) appeared at around 31,000 generations. This metadata describes information on the Ara-3 clones and the columns represent:
+
+| Column           | Description                                |
+|------------------|--------------------------------------------|
+| sample           | clone name					|
+| generation       | generation when sample frozen		|
+| clade            | based on parsimony-based tree		|
+| strain           | ancestral strain				|
+| cit              | citrate-using mutant status		|
+| run              | Sequence read archive sample ID		|
+| genome_size      | size in Mbp (made up data for this lesson) |
+
 * R has a number of built-in tools for basic graphing - types such as histograms, scatter plots, bar charts, bloxplots, and [more](http://www.statmethods.net/graphs/).
 *Let's test a few out on the `genome_size` vector in our dataset. 
 
